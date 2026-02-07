@@ -3,164 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATTEO // ARTIFACTS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <title>MATTEO // ARTIFACT_V4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
-<body>
+<body class="theme-stable">
 
+    <div class="scanline"></div>
     <div class="noise"></div>
-    
     <div id="cursor"></div>
 
-    <main>
-        <aside>
-            <div class="top-section">
-                <div class="profile-header">
-                    <h1>MATTEO GRASSI</h1>
-                    <p class="mono dimmed">github.com/bingkahuDEV</p>
-                </div>
+    <div class="escalation-module" onclick="toggleEscalation()">
+        <span class="mono">SYSTEM_STATUS:</span>
+        <span id="status-text" class="status-stable">STABLE</span>
+        <div class="toggle-switch"></div>
+    </div>
 
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="label">Primary Stack</span>
-                        <span class="value mono">Node/Rust</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Focus</span>
-                        <span class="value mono">P2P/Sec</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Location</span>
-                        <span class="value mono">LND, UK</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Local Time</span>
-                        <span class="value gold mono" id="time-display">--:--:--</span>
-                    </div>
+    <main>
+        <aside class="sidebar">
+            <div class="branding">
+                <h2 class="mono gold">M.GRASSI</h2>
+                <p class="dim mono">CREATIVE_TECHNOLOGIST</p>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header mono">LIVE_FEED.log</div>
+                <div id="terminal-body" class="mono">
+                    <p class="gold">>> Initializing...</p>
+                    <p class="gold">>> Location: London_UK</p>
                 </div>
             </div>
 
-            <div class="footer-note mono dim">
-                SYSTEM: REFINED_UI_V1<br>
-                STATUS: ONLINE
+            <div class="system-metrics">
+                <div class="metric">
+                    <span class="label mono">CORE_TEMP</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 42%;"></div></div>
+                </div>
+                <div class="metric">
+                    <span class="label mono">UPTIME</span>
+                    <span class="value mono" id="uptime">00:00:00</span>
+                </div>
             </div>
         </aside>
 
-        <section class="gallery">
-            
-            <div class="project-row" data-id="1">
-                <div class="project-header">
-                    <div class="header-left">
-                        <span class="project-index">01</span>
-                        <span class="project-title">CodeChat P2P</span>
+        <section class="content">
+            <header class="hero">
+                <h1 id="parallax-name">MATTEO</h1>
+                <p class="hero-tagline mono">Refining raw code into digital ore.</p>
+            </header>
+
+            <div class="artifact-grid">
+                <div class="artifact-card" data-project="codechat">
+                    <div class="scanner-line"></div>
+                    <div class="card-header">
+                        <span class="index mono">01</span>
+                        <h3 class="mono">CODECHAT_P2P</h3>
                     </div>
-                    <span class="project-meta">FLAGSHIP</span>
+                    <div class="card-body">
+                        <p>Decentralized messaging architecture utilizing WebRTC. No servers. No middleman. Pure sovereignty.</p>
+                        <div class="tech-row mono">
+                            <span>WEBRTC</span><span>RUST</span><span>PEERJS</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://github.com/bingkahuDEV" target="_blank" class="mono">DECRYPT_SOURCE ↗</a>
+                    </div>
                 </div>
-                <div class="project-detail">
-                    <div class="detail-content">
-                        <div class="info-col">
-                            <div class="tech-stack">
-                                <span class="tech-tag">WebRTC</span>
-                                <span class="tech-tag">PeerJS</span>
-                                <span class="tech-tag">No-Backend</span>
-                            </div>
-                            <div class="analysis-block">
-                                <h4>System Analysis</h4>
-                                <p>A serverless, decentralized messaging architecture. By leveraging WebRTC for direct peer-to-peer data channels, this artifact eliminates the central server vulnerability, ensuring 100% data sovereignty.</p>
-                            </div>
+
+                <div class="artifact-card" data-project="baghdad">
+                    <div class="scanner-line"></div>
+                    <div class="card-header">
+                        <span class="index mono">02</span>
+                        <h3 class="mono">ROUND_CITY_3D</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>A WebGL historical reconstruction. Optimized Three.js geometry paired with custom GLSL shaders.</p>
+                        <div class="tech-row mono">
+                            <span>THREE.JS</span><span>GLSL</span><span>WEBGL</span>
                         </div>
-                        <div class="action-col">
-                            <a href="https://github.com/bingkahuDEV" class="btn-link">View Source -></a>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="mono">RECONSTRUCT_VIEW ↗</a>
+                    </div>
+                </div>
+
+                <div class="artifact-card" data-project="sec">
+                    <div class="scanner-line"></div>
+                    <div class="card-header">
+                        <span class="index mono">03</span>
+                        <h3 class="mono">THREAT_INTEL</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Exposing malicious automation patterns. OSINT research and behavioral heuristic analysis.</p>
+                        <div class="tech-row mono">
+                            <span>PYTHON</span><span>OSINT</span><span>SEC_OPS</span>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="https://dev.to/bingkahu" target="_blank" class="mono">READ_INTEL ↗</a>
                     </div>
                 </div>
             </div>
-
-            <div class="project-row" data-id="2">
-                <div class="project-header">
-                    <div class="header-left">
-                        <span class="project-index">02</span>
-                        <span class="project-title">Baghdad 3D</span>
-                    </div>
-                    <span class="project-meta">WEBGL</span>
-                </div>
-                <div class="project-detail">
-                    <div class="detail-content">
-                        <div class="info-col">
-                            <div class="tech-stack">
-                                <span class="tech-tag">Three.js</span>
-                                <span class="tech-tag">GLSL Shaders</span>
-                                <span class="tech-tag">History</span>
-                            </div>
-                            <div class="analysis-block">
-                                <h4>Creative Analysis</h4>
-                                <p>An immersive historical reconstruction of the Round City. Demonstrates high-fidelity rendering optimization and the ability to translate complex historical data into interactive spatial environments.</p>
-                            </div>
-                        </div>
-                        <div class="action-col">
-                            <a href="#" class="btn-link">Launch Experience -></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-row" data-id="3">
-                <div class="project-header">
-                    <div class="header-left">
-                        <span class="project-index">03</span>
-                        <span class="project-title">Bot_Exposer</span>
-                    </div>
-                    <span class="project-meta">OSINT</span>
-                </div>
-                <div class="project-detail">
-                    <div class="detail-content">
-                        <div class="info-col">
-                            <div class="tech-stack">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">Traffic Analysis</span>
-                                <span class="tech-tag">Cybersec</span>
-                            </div>
-                            <div class="analysis-block">
-                                <h4>Threat Analysis</h4>
-                                <p>A research initiative focused on identifying and de-anonymizing malicious bot networks on social platforms. Focuses on behavioral patterns and heuristic detection methods.</p>
-                            </div>
-                        </div>
-                        <div class="action-col">
-                            <a href="https://dev.to/bingkahu" class="btn-link">Read Report -></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             <div class="project-row" data-id="4">
-                <div class="project-header">
-                    <div class="header-left">
-                        <span class="project-index">04</span>
-                        <span class="project-title">Py_Lingo CLI</span>
-                    </div>
-                    <span class="project-meta">TOOLING</span>
-                </div>
-                <div class="project-detail">
-                    <div class="detail-content">
-                        <div class="info-col">
-                            <div class="tech-stack">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">CLI Design</span>
-                                <span class="tech-tag">NLP</span>
-                            </div>
-                            <div class="analysis-block">
-                                <h4>Utility Analysis</h4>
-                                <p>A developer-first CLI tool for mastering Python terminology. Integrates lightweight AI concepts to provide context-aware definitions directly in the terminal.</p>
-                            </div>
-                        </div>
-                        <div class="action-col">
-                            <a href="#" class="btn-link">Install Package -></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </section>
     </main>
 
