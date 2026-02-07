@@ -1,104 +1,98 @@
-// 1. INITIAL SETUP & LOADER
-const loader = document.getElementById('loader');
-const loaderText = document.querySelector('.terminal-loader');
-
-window.addEventListener('load', () => {
-    // Fake boot sequence timing
-    setTimeout(() => {
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            initAnimations(); // Start animations after load
-        }, 500);
-    }, 2500);
-});
-
-// 2. SMOOTH SCROLL (LENIS)
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smooth: true
-});
-
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
-requestAnimationFrame(raf);
-
-// 3. CUSTOM CURSOR
-const cursor = document.getElementById('cursor');
-const cursorBlur = document.getElementById('cursor-blur');
-
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+document.addEventListener('DOMContentLoaded', () => {
     
-    // Slight delay for the blur to create "drag" feel
-    cursorBlur.animate({
-        left: e.clientX + "px",
-        top: e.clientY + "px"
-    }, { duration: 500, fill: "forwards" });
-});
+    // --- 1. ACCORDION LOGIC ---
+    const projectRows = document.querySelectorAll('.project-row');
 
-// 4. MATRIX RAIN EFFECT
-const canvas = document.getElementById('matrix-canvas');
-const ctx = canvas.getContext('2d');
+    projectRows.forEach(row => {
+        // Main Click Interaction
+        row.addEventListener('click', () => {
+            const detail = row.querySelector('.project-detail');
+            const isActive = row.classList.contains('active');
 
-let width = canvas.width = window.innerWidth;
-let height = canvas.height = window.innerHeight;
+            // Close all other rows first (Accordion behavior)
+            projectRows.forEach(otherRow => {
+                if (otherRow !== row) {
+                    otherRow.classList.remove('active');
+                    otherRow.querySelector('.project-detail').style.height = '0';
+                }
+            });
 
-const cols = Math.floor(width / 20);
-const ypos = Array(cols).fill(0);
+            // Toggle current row
+            if (!isActive) {
+                row.classList.add('active');
+                // Set height to scrollHeight to animate smoothly
+                detail.style.height = detail.scrollHeight + 'px';
+            } else {
+                row.classList.remove('active');
+                detail.style.height = '0';
+            }
+        });
 
-window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-});
+        // Hover Interactions for Cursor
+        row.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+        row.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
 
-function matrix() {
-    // Draw semi-transparent black to create trail effect
-    ctx.fillStyle = '#0001'; 
-    ctx.fillRect(0, 0, width, height);
-    
-    ctx.fillStyle = '#0f0';
-    ctx.font = '15px monospace';
-    
-    ypos.forEach((y, ind) => {
-        // Generate random character
-        const text = String.fromCharCode(Math.random() * 128);
-        const x = ind * 20;
-        ctx.fillText(text, x, y);
+    // Handle Window Resize (Reset heights if needed)
+    window.addEventListener('resize', () => {
+        const activeRow = document.querySelector('.project-row.active');
+        if (activeRow) {
+            const detail = activeRow.querySelector('.project-detail');
+            detail.style.height = 'auto'; // Reset to auto to recalculate
+            const newHeight = detail.scrollHeight;
+            detail.style.height = newHeight + 'px';
+        }
+    });
+
+
+    // --- 2. REAL-TIME CLOCK (London Time) ---
+    function updateTime() {
+        const timeDisplay = document.getElementById('time-display');
+        const now = new Date();
         
-        // Randomly reset column to top
-        if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
-        else ypos[ind] = y + 20;
-    });
-}
-setInterval(matrix, 50);
+        // Format for London (Matteo's location)
+        const options = { 
+            timeZone: 'Europe/London', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: false 
+        };
+        
+        const timeString = new Intl.DateTimeFormat('en-GB', options).format(now);
+        timeDisplay.textContent = timeString;
+    }
 
-// 5. GSAP ANIMATIONS
-function initAnimations() {
-    gsap.registerPlugin(ScrollTrigger);
+    setInterval(updateTime, 1000);
+    updateTime(); // Run immediately
 
-    // Hero Text Reveal
-    gsap.from(".hero-title", {
-        y: 100,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power4.out"
+
+    // --- 3. CUSTOM CURSOR LOGIC ---
+    const cursor = document.getElementById('cursor');
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    // Track mouse position
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     });
 
-    // Bento Grid Stagger
-    gsap.from(".tile", {
-        scrollTrigger: {
-            trigger: ".bento-grid",
-            start: "top 80%",
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power2.out"
-    });
-}
+    // Smooth animation loop for cursor
+    function animateCursor() {
+        // Linear interpolation for smooth lag
+        const dx = mouseX - cursorX;
+        const dy = mouseY - cursorY;
+        
+        cursorX += dx * 0.15; // Speed of follow (0.1 = slow, 0.5 = fast)
+        cursorY += dy * 0.15;
+
+        cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`; // -10 offsets half the width
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+});
