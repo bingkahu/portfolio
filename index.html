@@ -3,111 +3,1201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATTEO // ARTIFACT_V4</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <title>bingkahu - Developer Who Actually Ships Stuff</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;800&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-darker: #050810;
+            --primary: #00ff88;
+            --secondary: #0088ff;
+            --accent: #ff00ff;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        /* Matrix Rain Background */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        /* Cursor Trail */
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            pointer-events: none;
+            z-index: 9999;
+            animation: trail-fade 0.5s forwards;
+        }
+
+        @keyframes trail-fade {
+            to {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+
+        /* Konami Code Easter Egg */
+        body.party-mode {
+            animation: rainbow-bg 2s linear infinite;
+        }
+
+        @keyframes rainbow-bg {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            91% { transform: translate(-2px, 2px); }
+            92% { transform: translate(2px, -2px); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::before {
+            content: '>';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover::before {
+            left: -18px;
+            opacity: 1;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 40px 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-shift 3s linear infinite;
+        }
+
+        @keyframes gradient-shift {
+            to { background-position: 200% center; }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(18px, 3vw, 28px);
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hero .typing-text::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 2px solid;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            box-shadow: 0 0 30px var(--secondary);
+        }
+
+        /* Terminal Window */
+        .terminal {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 60px auto;
+            max-width: 800px;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary);
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-body {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin: 5px 0;
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+        }
+
+        .terminal-command {
+            color: var(--secondary);
+        }
+
+        .terminal-output {
+            color: var(--accent);
+        }
+
+        /* Section */
+        section {
+            padding: 100px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        /* Projects */
+        .project-card {
+            background: var(--glass);
+            border: 2px solid rgba(0, 136, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            border-color: var(--secondary);
+            transform: translateX(10px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .project-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .project-badge {
+            padding: 8px 16px;
+            background: rgba(255, 0, 255, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .project-description {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin: 20px 0;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .tech-tag {
+            padding: 8px 16px;
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid var(--secondary);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .tech-tag:hover {
+            background: var(--secondary);
+            color: var(--bg-dark);
+            transform: scale(1.1);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Skills */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 60px 0;
+        }
+
+        .skill-item {
+            aspect-ratio: 1;
+            background: var(--glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .skill-item:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            transform: rotateY(360deg);
+        }
+
+        .skill-icon {
+            font-size: 48px;
+        }
+
+        .skill-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .skill-level {
+            position: absolute;
+            bottom: 10px;
+            font-size: 10px;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Hidden Easter Egg */
+        .easter-egg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--bg-dark);
+            border: 3px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            z-index: 10000;
+            max-width: 500px;
+            text-align: center;
+            transition: transform 0.5s;
+        }
+
+        .easter-egg.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .easter-egg h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .easter-egg p {
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+
+        .easter-egg .close-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* Glitch Text */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--accent);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--secondary);
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: polygon(0 0, 100% 0, 100% 5%, 0 5%); }
+            10% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); }
+            20% { clip-path: polygon(0 40%, 100% 40%, 100% 45%, 0 45%); }
+            30% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); }
+            40% { clip-path: polygon(0 75%, 100% 75%, 100% 80%, 0 80%); }
+            50% { clip-path: polygon(0 85%, 100% 85%, 100% 90%, 0 90%); }
+            100% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .contact-card {
+            background: var(--glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+        }
+
+        .contact-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .contact-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .contact-card a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-card a:hover {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Funny Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darker);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 24px;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-grid, .skills-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
-<body class="theme-stable">
+<body>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
 
-    <div class="scanline"></div>
-    <div class="noise"></div>
-    <div id="cursor"></div>
-
-    <div class="escalation-module" onclick="toggleEscalation()">
-        <span class="mono">SYSTEM_STATUS:</span>
-        <span id="status-text" class="status-stable">STABLE</span>
-        <div class="toggle-switch"></div>
+    <!-- Funny Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text" id="loadingText">Initializing awesomeness...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
     </div>
 
-    <main>
-        <aside class="sidebar">
-            <div class="branding">
-                <h2 class="mono gold">M.GRASSI</h2>
-                <p class="dim mono">CREATIVE_TECHNOLOGIST</p>
+    <!-- Easter Egg Modal -->
+    <div class="easter-egg" id="easterEgg">
+        <h3>🎉 You Found the Secret! 🎉</h3>
+        <p>You just entered the <strong>KONAMI CODE</strong>!</p>
+        <p>(↑ ↑ ↓ ↓ ← → ← → B A)</p>
+        <p>Here's a secret: I spent way too much time making this portfolio instead of actually coding my projects. 😅</p>
+        <button class="close-btn" onclick="closeEasterEgg()">Close</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">&gt;_ bingkahu</div>
+            <ul class="nav-links">
+                <li><a href="#home">home</a></li>
+                <li><a href="#projects">projects</a></li>
+                <li><a href="#skills">skills</a></li>
+                <li><a href="#contact">contact</a></li>
+                <li><a href="#" onclick="activatePartyMode()">🎨</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="bingkahu">bingkahu</h1>
+            <p class="subtitle">
+                <span class="typing-text" id="typingText"></span>
+            </p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn btn-primary">View My Work</a>
+                <a href="https://github.com/bingkahu" class="btn btn-secondary" target="_blank">GitHub Profile</a>
+                <button class="btn btn-secondary" onclick="showSecret()">🤔 What's This?</button>
             </div>
+        </div>
+    </section>
 
-            <div class="terminal-container">
-                <div class="terminal-header mono">LIVE_FEED.log</div>
-                <div id="terminal-body" class="mono">
-                    <p class="gold">>> Initializing...</p>
-                    <p class="gold">>> Location: London_UK</p>
-                </div>
+    <!-- Terminal Demo -->
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-command"> whoami</span>
             </div>
-
-            <div class="system-metrics">
-                <div class="metric">
-                    <span class="label mono">CORE_TEMP</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 42%;"></div></div>
-                </div>
-                <div class="metric">
-                    <span class="label mono">UPTIME</span>
-                    <span class="value mono" id="uptime">00:00:00</span>
-                </div>
+            <div class="terminal-line">
+                <span class="terminal-output">bingkahu - Full Stack Developer who actually ships</span>
             </div>
-        </aside>
-
-        <section class="content">
-            <header class="hero">
-                <h1 id="parallax-name">MATTEO</h1>
-                <p class="hero-tagline mono">Refining raw code into digital ore.</p>
-            </header>
-
-            <div class="artifact-grid">
-                <div class="artifact-card" data-project="codechat">
-                    <div class="scanner-line"></div>
-                    <div class="card-header">
-                        <span class="index mono">01</span>
-                        <h3 class="mono">CODECHAT_P2P</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Decentralized messaging architecture utilizing WebRTC. No servers. No middleman. Pure sovereignty.</p>
-                        <div class="tech-row mono">
-                            <span>WEBRTC</span><span>RUST</span><span>PEERJS</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="https://github.com/bingkahuDEV" target="_blank" class="mono">DECRYPT_SOURCE ↗</a>
-                    </div>
-                </div>
-
-                <div class="artifact-card" data-project="baghdad">
-                    <div class="scanner-line"></div>
-                    <div class="card-header">
-                        <span class="index mono">02</span>
-                        <h3 class="mono">ROUND_CITY_3D</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>A WebGL historical reconstruction. Optimized Three.js geometry paired with custom GLSL shaders.</p>
-                        <div class="tech-row mono">
-                            <span>THREE.JS</span><span>GLSL</span><span>WEBGL</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="#" class="mono">RECONSTRUCT_VIEW ↗</a>
-                    </div>
-                </div>
-
-                <div class="artifact-card" data-project="sec">
-                    <div class="scanner-line"></div>
-                    <div class="card-header">
-                        <span class="index mono">03</span>
-                        <h3 class="mono">THREAT_INTEL</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Exposing malicious automation patterns. OSINT research and behavioral heuristic analysis.</p>
-                        <div class="tech-row mono">
-                            <span>PYTHON</span><span>OSINT</span><span>SEC_OPS</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="https://dev.to/bingkahu" target="_blank" class="mono">READ_INTEL ↗</a>
-                    </div>
-                </div>
+            <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-command"> cat skills.txt</span>
             </div>
-        </section>
-    </main>
+            <div class="terminal-line">
+                <span class="terminal-output">HTML, CSS, JavaScript, WebRTC, P2P, PeerJS</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span class="terminal-command"> ./deploy-awesome-projects.sh</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-output">✓ CodeChat: Deployed</span>
+            </div>
+            <div class="terminal-line">
+                <span class="terminal-output">✓ More cool stuff: Coming soon™</span>
+            </div>
+        </div>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Stats -->
+    <section>
+        <div class="stats-grid">
+            <div class="stat-card" onclick="this.querySelector('.stat-number').innerText = Math.floor(Math.random() * 100) + 1">
+                <div class="stat-number">4+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-card" onclick="this.querySelector('.stat-number').innerText = '∞'">
+                <div class="stat-number">42</div>
+                <div class="stat-label">Projects Shipped</div>
+            </div>
+            <div class="stat-card" onclick="this.querySelector('.stat-number').innerText = '🚀'">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Code Quality*</div>
+            </div>
+            <div class="stat-card" onclick="this.querySelector('.stat-number').innerText = '💯'">
+                <div class="stat-number">9001</div>
+                <div class="stat-label">Lines of Code</div>
+            </div>
+        </div>
+        <p style="text-align: center; color: var(--text-dim); font-size: 12px; margin-top: 20px;">
+            *According to me. Also, try clicking the stats. 😉
+        </p>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+        <h2>Featured Projects</h2>
+        <p style="color: var(--text-dim); margin: 20px 0; font-size: 18px;">
+            Things I've built when I should have been sleeping
+        </p>
+
+        <div class="project-card">
+            <div class="project-header">
+                <h3 class="project-title">🔒 CodeChat (P2P-Comms)</h3>
+                <span class="project-badge">Featured</span>
+            </div>
+            <p class="project-description">
+                An encrypted, serverless peer-to-peer messaging platform that uses WebRTC for direct browser-to-browser communication. 
+                Because why trust a server when you can trust math? Features end-to-end encryption, glassmorphism UI, 
+                and zero data collection. It's like WhatsApp, but actually private.
+            </p>
+            <div class="tech-tags">
+                <span class="tech-tag">WebRTC</span>
+                <span class="tech-tag">PeerJS</span>
+                <span class="tech-tag">Vanilla JS</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">Encryption</span>
+                <span class="tech-tag">P2P</span>
+                <span class="tech-tag">Privacy</span>
+            </div>
+            <p style="color: var(--text-dim); margin: 20px 0;">
+                <strong>Features:</strong><br>
+                ✓ Direct browser-to-browser messaging<br>
+                ✓ Client-side identity vault<br>
+                ✓ Zero server-side data storage<br>
+                ✓ End-to-end encryption (coming soon™)<br>
+                ✓ File sharing via ArrayBuffer (roadmap)<br>
+                ✓ Mesh networking support (planned)
+            </p>
+            <div class="project-links">
+                <a href="https://github.com/bingkahu/p2p-comms" class="btn btn-primary" target="_blank">View Source</a>
+                <a href="https://bingkahu.github.io/p2p-comms/" class="btn btn-secondary" target="_blank">Live Demo</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <h3 class="project-title">🎮 </h3>
+                <span class="project-badge">Coming Soon</span>
+            </div>
+            <p class="project-description">
+                This space is reserved for your next incredible project. Will it be an AI-powered game? 
+                A word puzzle solver? The suspense is killing me (and probably you too).
+            </p>
+            <div class="tech-tags">
+                <span class="tech-tag">Your Imagination</span>
+                <span class="tech-tag">Coffee</span>
+                <span class="tech-tag">Determination</span>
+            </div>
+            <div class="project-links">
+                <a href="#" class="btn btn-secondary" onclick="alert('Building amazing stuff takes time!')">Stay Tuned</a>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <h3 class="project-title">📝 Another Cool Project</h3>
+                <span class="project-badge">In Progress</span>
+            </div>
+            <p class="project-description">
+                Currently brewing something awesome. Check back soon, or follow me on GitHub to see what I'm up to!
+            </p>
+            <div class="tech-tags">
+                <span class="tech-tag">Mystery</span>
+                <span class="tech-tag">Innovation</span>
+                <span class="tech-tag">Awesome</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <h2>Tech Stack</h2>
+        <p style="color: var(--text-dim); margin: 20px 0; font-size: 18px;">
+            Things I know how to Google (I mean, master)
+        </p>
+        <div class="skills-container">
+            <div class="skill-item">
+                <div class="skill-icon">🌐</div>
+                <div class="skill-name">HTML5</div>
+                <div class="skill-level">Expert</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🎨</div>
+                <div class="skill-name">CSS3</div>
+                <div class="skill-level">Expert</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">⚡</div>
+                <div class="skill-name">JavaScript</div>
+                <div class="skill-level">Advanced</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">📡</div>
+                <div class="skill-name">WebRTC</div>
+                <div class="skill-level">Advanced</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🔗</div>
+                <div class="skill-name">P2P</div>
+                <div class="skill-level">Advanced</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🤝</div>
+                <div class="skill-name">PeerJS</div>
+                <div class="skill-level">Proficient</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🔐</div>
+                <div class="skill-name">Encryption</div>
+                <div class="skill-level">Learning</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🎯</div>
+                <div class="skill-name">Git</div>
+                <div class="skill-level">Proficient</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">☕</div>
+                <div class="skill-name">Coffee</div>
+                <div class="skill-level">Mastered</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🐛</div>
+                <div class="skill-name">Debugging</div>
+                <div class="skill-level">console.log()</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">💻</div>
+                <div class="skill-name">VS Code</div>
+                <div class="skill-level">Daily Driver</div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon">🚀</div>
+                <div class="skill-name">Shipping Code</div>
+                <div class="skill-level">Always</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2>Get In Touch</h2>
+        <p style="color: var(--text-dim); margin: 20px 0; font-size: 18px;">
+            Let's build something awesome together
+        </p>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">📧</div>
+                <h3>Email</h3>
+                <a href="mailto:mgrassi1@outlook.com">mgrassi1@outlook.com</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">💼</div>
+                <h3>GitHub</h3>
+                <a href="https://github.com/bingkahu" target="_blank">@bingkahu</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">💰</div>
+                <h3>Hire Me</h3>
+                <a href="https://www.fiverr.com/bingkahu" target="_blank">Fiverr</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">☕</div>
+                <h3>Support</h3>
+                <a href="https://ko-fi.com/bingkahu" target="_blank">Buy me a coffee</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/bingkahu" target="_blank">GitHub</a>
+            <a href="mailto:mgrassi1@outlook.com">Email</a>
+            <a href="https://www.fiverr.com/bingkahu" target="_blank">Fiverr</a>
+            <a href="https://ko-fi.com/bingkahu" target="_blank">Ko-fi</a>
+        </div>
+        <p style="color: var(--text-dim); margin: 20px 0;">
+            &copy; 2026 bingkahu. Built with 💚, ☕, and way too many stackoverflow searches.
+        </p>
+        <p style="color: var(--text-dim); font-size: 12px;">
+            No frameworks were harmed in the making of this portfolio. (It's vanilla JS, baby!)
+        </p>
+        <p style="color: var(--text-dim); font-size: 10px; margin-top: 20px;">
+            Try the Konami Code: ↑ ↑ ↓ ↓ ← → ← → B A 😉
+        </p>
+    </footer>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrix = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 8, 16, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff88';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrix.charAt(Math.floor(Math.random() * matrix.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Cursor Trail
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.7) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                document.body.appendChild(trail);
+                setTimeout(() => trail.remove(), 500);
+            }
+        });
+
+        // Typing Effect
+        const phrases = [
+            "Full Stack Developer",
+            "P2P Enthusiast",
+            "WebRTC Wizard",
+            "Coffee Consumer",
+            "Bug Creator (I mean Fixer)",
+            "Maker of Things"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const current = phrases[phraseIndex];
+            const typingEl = document.getElementById('typingText');
+
+            if (isDeleting) {
+                typingEl.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === current.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+
+        typeEffect();
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const loadingTexts = [
+                "Initializing awesomeness...",
+                "Loading creativity...",
+                "Compiling code...",
+                "Debugging bugs...",
+                "Making coffee...",
+                "Almost there...",
+                "Welcome! 🚀"
+            ];
+
+            let textIndex = 0;
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 30;
+                if (progress > 100) progress = 100;
+
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('loadingText').textContent = loadingTexts[Math.min(textIndex, loadingTexts.length - 1)];
+                textIndex++;
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').classList.add('hidden');
+                    }, 500);
+                }
+            }, 400);
+        });
+
+        // Konami Code Easter Egg
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode.splice(-konamiSequence.length - 1, konamiCode.length - konamiSequence.length);
+
+            if (konamiCode.join('').toLowerCase() === konamiSequence.join('').toLowerCase()) {
+                document.getElementById('easterEgg').classList.add('active');
+                document.body.classList.add('party-mode');
+            }
+        });
+
+        function closeEasterEgg() {
+            document.getElementById('easterEgg').classList.remove('active');
+            document.body.classList.remove('party-mode');
+        }
+
+        // Party Mode
+        function activatePartyMode() {
+            document.body.classList.toggle('party-mode');
+            if (document.body.classList.contains('party-mode')) {
+                alert('🎉 PARTY MODE ACTIVATED! 🎉');
+            }
+        }
+
+        // Secret Alert
+        function showSecret() {
+            const secrets = [
+                "🤫 This entire portfolio was built from scratch with vanilla JS!",
+                "💡 There are hidden easter eggs everywhere. Keep exploring!",
+                "🎮 Try entering the Konami Code: ↑ ↑ ↓ ↓ ← → ← → B A",
+                "☕ This portfolio was powered by approximately 47 cups of coffee",
+                "🐛 I fixed 99 bugs in the code. Then I had 127 bugs.",
+                "🚀 The stats are clickable. Try it!",
+                "🎨 The navigation paint brush activates party mode!",
+                "⌨️ The entire site has cursor trails and matrix rain!",
+                "🔥 This portfolio loads faster than your average framework-heavy site!",
+                "😎 No npm packages were harmed in the making of this site"
+            ];
+            alert(secrets[Math.floor(Math.random() * secrets.length)]);
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Secret Console Message
+        console.log('%c🚀 Hey there, curious developer!', 'font-size: 20px; font-weight: bold; color: #00ff88;');
+        console.log('%cWelcome to my portfolio. Since you\'re checking the console, you must be pretty cool.', 'font-size: 14px; color: #0088ff;');
+        console.log('%cFeel free to explore the code. It\'s all vanilla JS - no frameworks!', 'font-size: 14px; color: #ff00ff;');
+        console.log('%c\nPsst... try the Konami Code: ↑ ↑ ↓ ↓ ← → ← → B A', 'font-size: 12px; color: #888;');
+    </script>
 </body>
 </html>
